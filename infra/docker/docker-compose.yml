@@ -1,0 +1,26 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: vibrant
+      POSTGRES_USER: vibrant
+      POSTGRES_PASSWORD: vibrant
+    ports: ["5432:5432"]
+  redis:
+    image: redis:7
+    ports: ["6379:6379"]
+  api:
+    build: ../../apps/api
+    command: npm run dev
+    working_dir: /app
+    volumes: ["../../apps/api:/app"]
+    ports: ["4000:4000"]
+    depends_on: [postgres, redis]
+  web:
+    build: ../../apps/web
+    command: npm run dev
+    working_dir: /app
+    volumes: ["../../apps/web:/app"]
+    ports: ["3000:3000"]
+    depends_on: [api]
